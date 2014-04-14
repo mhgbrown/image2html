@@ -1,0 +1,47 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: "HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosBold', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+}
+
+#content {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+#image-upload {
+  margin: 0px auto;
+  width: 50%;
+  text-align: center;
+  display: table-cell; 
+  vertical-align: middle;
+}
+
+label, #image-file {
+  display: none;
+}
+
+#image-choose {
+  border: 20px solid black;
+  background: yellow;
+  padding: 20px;
+  font-size: 3em;
+  outline: none;
+}
+
+#image-choose:hover{
+  border: 20px solid yellow;
+  color: yellow;
+  background: url(/assets/images/bhain.jpg);
+  background-position:center; 
+}
+
+#image-container {
+  display: inline-block;
+}
