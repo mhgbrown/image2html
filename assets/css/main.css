@@ -38,10 +38,25 @@ label, #image-file {
 #image-choose:hover{
   border: 20px solid yellow;
   color: yellow;
-  background: url(/assets/images/bhain.jpg);
+  background: url(/assets/images/berghain.jpg);
   background-position:center; 
 }
 
 #image-container {
   display: inline-block;
 }
+
+.htmlized-image:after {
+  display: table;
+  content: " ";
+  clear: both;
+}
+
+/*.loading {
+  background-image: url(/assets/images/loading.gif);
+  background-size: 266px 132px;
+  color: transparent;
+  background-repeat: no-repeat;
+}*/
+
+

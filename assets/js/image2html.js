@@ -3,46 +3,45 @@
 var Image2HTML = function(){};
 
 Image2HTML.prototype = {
+  MAX_WORKERS: 4,
+
   OUTPUT_CLASSNAME: 'htmlized-image',
 
   convert: function(image, outputContainer) {
-    var imageData, i, r, g, b, a, tmpPixel, fragment, pixelDataWidth, pixelTemplate;
+    var workers = [],
+      imageParts = [],
+      imageData, i, fragment, imageDataWidth, workerImageData;
 
     this.canvas = this.canvas || document.createElement('canvas');
     this.ctx = this.ctx || this.canvas.getContext('2d');
 
+    this.canvas.width = image.width;
+    this.canvas.height = image.height;
     this.ctx.drawImage(image,0,0);
     imageData = this.ctx.getImageData(0, 0, image.width, image.height).data;
-    pixelDataWidth = image.width * 4;
+    imageDataWidth = image.width * 4;
 
     fragment = document.createDocumentFragment();
 
-    this.htmlizedImage = document.createElement('ul');
-    this.htmlizedImage.className = this.OUTPUT_CLASSNAME;
-    this.htmlizedImage.style.listStyleType = 'none';
-    this.htmlizedImage.style.padding = 0;
-    this.htmlizedImage.style.margin = 0;
-    fragment.appendChild(this.htmlizedImage);
+    for(i = 0; i < this.MAX_WORKERS; i++) {
+      imageParts[i] = document.createElement('ul');
+      imageParts[i].className = this.OUTPUT_CLASSNAME;
+      imageParts[i].style.listStyleType = 'none';
+      imageParts[i].style.padding = 0;
+      imageParts[i].style.margin = 0;
+      fragment.appendChild(imageParts[i]);
+    }
 
-    pixelTemplate = document.createElement('li');
-    pixelTemplate.style.float = 'left';
-    pixelTemplate.style.width = '1px';
-    pixelTemplate.style.height = '1px';
+    for(i = 0; i < this.MAX_WORKERS; i++) {
+      workers[i] = new Worker('/assets/js/htmlizer.js');
+      workers[i].addEventListener('message', function(event) {
+        var data = event.data;
+        imageParts[data.sequence].innerHTML = data.imageHTML;
+      }, false);
 
-    for(i = 0; i < imageData.length; i += 4) {
-      r = imageData[i];
-      g = imageData[i + 1];
-      b = imageData[i + 2];
-      a = imageData[i + 3];
+      workerImageData = Array.prototype.slice.call(imageData, i * imageData.length/this.MAX_WORKERS, (i + 1) * imageData.length/this.MAX_WORKERS);
 
-      tmpPixel = pixelTemplate.cloneNode(false);
-      tmpPixel.style.backgroundColor = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
-
-      if( i % pixelDataWidth === 0) {
-        tmpPixel.style.clear = 'both';
-      }
-
-      this.htmlizedImage.appendChild(tmpPixel);
+      workers[i].postMessage({'sequence': i, 'imageDataWidth': imageDataWidth, 'imageData': workerImageData});
     }
 
     outputContainer.appendChild(fragment);
