@@ -39,7 +39,7 @@ label, #image-file {
 #image-choose:hover{
   border: 20px solid yellow;
   color: yellow;
-  background: url(/assets/images/berghain.jpg);
+  background: url(../../assets/images/berghain.jpg);
   background-position:center; 
 }
 
