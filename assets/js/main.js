@@ -3,7 +3,8 @@
   window.onload = function() {
     var imageLoader = document.getElementById('image-file'),
       container = document.getElementById('image-container'),
-      imageChooser = document.getElementById('image-choose');
+      imageChooser = document.getElementById('image-choose'),
+      processingMessage = document.getElementById('image-processing-message');
 
     imageLoader.addEventListener('change', handleImage, false);
     imageChooser.addEventListener('click', chooseFile, false);
@@ -16,8 +17,9 @@
 
             img.onload = function() {
                 container.innerHTML = '';
-                window.Image2HTML.convert(img, container);
                 imageChooser.style.display = 'none';
+                processingMessage.style.display = 'inline-block';
+                window.Image2HTML.convert(img, container, cleanUp);
             };
             img.src = readerEvent.target.result;
         };
@@ -26,6 +28,10 @@
 
     function chooseFile(event) {
       imageLoader.click();
+    }
+
+    function cleanUp() {
+      processingMessage.style.display = 'none';
     }
   };
 

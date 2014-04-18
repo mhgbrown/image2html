@@ -7,13 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+    <ul id="info">
+      <li>This might freeze or crash your browser.</li>
+      <li>This uses <a href="http://en.wikipedia.org/wiki/Web_worker" target="_blank">web workers</a>.</li>
+      <li>This may incur a substantial wait if the image is large.</li>
+    </ul>
     <div id="content">
-      <form id="image-upload">
-        <button type="button" id="image-choose">IMAGE</button>
-        <label for="image-uploader">Upload an image</label>
-        <input type="file" id="image-file" name="image-file"/>
+      <div id="image-upload">
+        <form action="/">
+          <button type="button" id="image-choose">IMAGE</button><span id="image-processing-message">WAIT</span>
+          <label for="image-uploader">Upload an image</label>
+          <input type="file" id="image-file" name="image-file"/>
+        </form>
         <div id="image-container"></div>
-      </form>
+      </div>
     </div>
     <script src="/assets/js/image2html.js"></script>
     <script src="/assets/js/main.js"></script>

@@ -7,10 +7,12 @@ Image2HTML.prototype = {
 
   OUTPUT_CLASSNAME: 'htmlized-image',
 
-  convert: function(image, outputContainer) {
+  convert: function(image, outputContainer, onComplete) {
     var workers = [],
       imageParts = [],
-      imageData, i, fragment, imageDataWidth, workerImageData;
+      done = 0,
+      self = this,
+      imageData, i, imageDataWidth, workerImageData;
 
     this.canvas = this.canvas || document.createElement('canvas');
     this.ctx = this.ctx || this.canvas.getContext('2d');
@@ -21,15 +23,13 @@ Image2HTML.prototype = {
     imageData = this.ctx.getImageData(0, 0, image.width, image.height).data;
     imageDataWidth = image.width * 4;
 
-    fragment = document.createDocumentFragment();
-
     for(i = 0; i < this.MAX_WORKERS; i++) {
       imageParts[i] = document.createElement('ul');
       imageParts[i].className = this.OUTPUT_CLASSNAME;
       imageParts[i].style.listStyleType = 'none';
       imageParts[i].style.padding = 0;
       imageParts[i].style.margin = 0;
-      fragment.appendChild(imageParts[i]);
+      outputContainer.appendChild(imageParts[i]);
     }
 
     for(i = 0; i < this.MAX_WORKERS; i++) {
@@ -37,14 +37,16 @@ Image2HTML.prototype = {
       workers[i].addEventListener('message', function(event) {
         var data = event.data;
         imageParts[data.sequence].innerHTML = data.imageHTML;
+        
+        done += 1;
+        if(done === self.MAX_WORKERS && onComplete) {
+          onComplete();
+        }
       }, false);
 
       workerImageData = Array.prototype.slice.call(imageData, i * imageData.length/this.MAX_WORKERS, (i + 1) * imageData.length/this.MAX_WORKERS);
-
       workers[i].postMessage({'sequence': i, 'imageDataWidth': imageDataWidth, 'imageData': workerImageData});
     }
-
-    outputContainer.appendChild(fragment);
   }
 };
 
