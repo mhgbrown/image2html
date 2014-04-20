@@ -7,7 +7,9 @@ Image2HTML.prototype = {
 
   OUTPUT_CLASSNAME: 'htmlized-image',
 
-  convert: function(image, outputContainer, onComplete) {
+  HTMLIZER: '/assets/js/htmlizer.js',
+
+  convert: function(image, outputContainer, onComplete, onProgress) {
     var workers = [],
       imageParts = [],
       done = 0,
@@ -33,12 +35,16 @@ Image2HTML.prototype = {
     }
 
     for(i = 0; i < this.MAX_WORKERS; i++) {
-      workers[i] = new Worker('/assets/js/htmlizer.js');
+      workers[i] = new Worker(self.HTMLIZER);
       workers[i].addEventListener('message', function(event) {
         var data = event.data;
         imageParts[data.sequence].innerHTML = data.imageHTML;
         
         done += 1;
+        if( onProgress ) {
+          onProgress(done/self.MAX_WORKERS);
+        }
+
         if(done === self.MAX_WORKERS && onComplete) {
           onComplete();
         }

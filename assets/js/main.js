@@ -19,7 +19,7 @@
                 container.innerHTML = '';
                 imageChooser.style.display = 'none';
                 processingMessage.style.display = 'inline-block';
-                window.Image2HTML.convert(img, container, cleanUp);
+                window.Image2HTML.convert(img, container, cleanUp, updateProgress);
             };
             img.src = readerEvent.target.result;
         };
@@ -32,6 +32,10 @@
 
     function cleanUp() {
       processingMessage.style.display = 'none';
+    }
+
+    function updateProgress(progress) {
+      console.log('progress: ' + progress * 100 + "%");
     }
   };
 

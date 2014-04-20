@@ -1,5 +1,5 @@
-self.addEventListener('message', function(e) {
-  var data = e.data,
+self.addEventListener('message', function(event) {
+  var data = event.data,
    html = '',
    imageData = data.imageData,
    pixelStart = '<li style="float:left;width:1px;height:1px;background-color:rgba(',
@@ -13,7 +13,7 @@ self.addEventListener('message', function(e) {
     a = imageData[i + 3];
 
     if( i % data.imageDataWidth === 0) {
-      html += (pixelStart + r + ',' + g + ',' + b + ',' + a + '); clear: both;' + pixelEnd);
+      html += (pixelStart + r + ',' + g + ',' + b + ',' + a + '); clear: left;' + pixelEnd);
     } else {
       html += (pixelStart + r + ',' + g + ',' + b + ',' + a + ');' + pixelEnd);
     }
