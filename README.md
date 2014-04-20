@@ -1,4 +1,4 @@
-# Image 2 HTML
+# [Image 2 HTML](http://image2html.morgan.io)
 Reproduces an uploaded image with HTML elements.
 
 ## Huh?
